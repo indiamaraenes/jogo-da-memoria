@@ -1,0 +1,266 @@
+:root {
+  --red: #e60012;
+  --red-dark: #8b0000;
+  --bg-1: #0d0d0d;
+  --bg-2: #1a1a1a;
+  --white: #ffffff;
+  --shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+  --gap: 12px;
+  --card-radius: 12px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+body {
+  height: 100vh;
+  overflow: hidden; /* evita rolagem */
+  background: radial-gradient(circle at 30% 20%, var(--bg-2), var(--bg-1) 60%);
+  color: var(--white);
+  font-family: "Noto Sans JP", system-ui, -apple-system, Segoe UI, Roboto, Arial,
+    sans-serif;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.container {
+  height: 100vh;
+  width: min(1200px, 96vw);
+  display: flex;
+  flex-direction: column;
+  padding: 10px 12px 14px;
+}
+
+/* Cabeçalho e controles */
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 4px 0;
+}
+.title {
+  margin: 0;
+  font-size: clamp(18px, 2.6vw, 30px);
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  display: flex;
+  gap: 0.5rem;
+}
+.title .jp {
+  font-family: "Noto Serif JP", serif;
+  color: var(--red);
+  font-size: 1.1em;
+  letter-spacing: 2px;
+}
+.controls {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.select {
+  background: #141414;
+  color: #fff;
+  border: 1px solid #2a2a2a;
+  padding: 6px 10px;
+  border-radius: 10px;
+  box-shadow: var(--shadow);
+}
+.btn {
+  appearance: none;
+  border: none;
+  background: linear-gradient(135deg, var(--red), var(--red-dark));
+  color: var(--white);
+  padding: 8px 14px;
+  border-radius: 10px;
+  cursor: pointer;
+  font-weight: 700;
+  box-shadow: var(--shadow);
+  transition: transform 0.15s ease, filter 0.15s ease;
+}
+.btn:hover {
+  transform: translateY(-1px);
+  filter: saturate(1.05);
+}
+.btn:active {
+  transform: translateY(0) scale(0.98);
+}
+
+/* HUD */
+.hud {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  margin: 6px 0 4px;
+  font-size: 0.9rem;
+  opacity: 0.95;
+}
+.hud-item {
+  background: #151515;
+  padding: 6px 10px;
+  border-radius: 10px;
+  box-shadow: var(--shadow);
+}
+
+/* Área do tabuleiro ocupa o espaço restante e centraliza o grid */
+.board-wrap {
+  flex: 1;
+  display: grid;
+  place-items: center; /* centraliza vertical e horizontal */
+  min-height: 0;
+}
+
+/* Grid sem rolagem; gap fixo — colunas/linhas e tamanhos são definidos pelo JS (fit-to-viewport) */
+#game-board {
+  display: grid;
+  gap: var(--gap);
+  justify-content: center;
+  align-content: center;
+}
+
+/* Cartas e efeito flip */
+.card {
+  perspective: 1000px;
+  position: relative;
+  border-radius: var(--card-radius);
+}
+.card-inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transform-style: preserve-3d;
+  transition: transform 0.6s ease;
+  cursor: pointer;
+}
+.card.flipped .card-inner {
+  transform: rotateY(180deg);
+}
+
+.card-front,
+.card-back {
+  position: absolute;
+  inset: 0;
+  border-radius: var(--card-radius);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  backface-visibility: hidden;
+  box-shadow: var(--shadow);
+}
+
+/* ===== Verso (baralho tradicional, sem texto) ===== */
+.card-back {
+  background-color: var(--red);
+  /* padrão losangulado sutil */
+  background-image: repeating-linear-gradient(
+      45deg,
+      rgba(255, 255, 255, 0.15) 0 2px,
+      transparent 2px 10px
+    ),
+    repeating-linear-gradient(
+      -45deg,
+      rgba(255, 255, 255, 0.15) 0 2px,
+      transparent 2px 10px
+    );
+  /* molduras brancas internas */
+  box-shadow: inset 0 0 0 3px #fff, inset 0 0 0 6px rgba(255, 255, 255, 0.35),
+    var(--shadow);
+  border-radius: var(--card-radius);
+}
+
+/* ===== Frente (letra central grande e nítida) ===== */
+.card-front {
+  background: #fff;
+  color: var(--red);
+  transform: rotateY(180deg);
+  border: 3px solid var(--red);
+  font-weight: 900;
+  font-size: clamp(26px, 4.4vw, 56px); /* aumente/diminua conforme desejar */
+  line-height: 1;
+  letter-spacing: 1px;
+  text-shadow: 0 1px 0 rgba(0, 0, 0, 0.05);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Feedback de par encontrado */
+.card.matched .card-front {
+  box-shadow: 0 0 0 3px var(--red) inset, 0 10px 20px rgba(0, 0, 0, 0.38);
+  filter: saturate(1.08) contrast(1.05);
+}
+.card.matched .card-inner {
+  animation: pulse 600ms ease;
+}
+@keyframes pulse {
+  0% {
+    transform: scale(1) rotateY(180deg);
+  }
+  50% {
+    transform: scale(1.04) rotateY(180deg);
+  }
+  100% {
+    transform: scale(1) rotateY(180deg);
+  }
+}
+
+/* Rodapé */
+.footer {
+  margin-top: 6px;
+  text-align: center;
+  opacity: 0.8;
+  font-size: 0.85rem;
+}
+
+/* Modal de vitória */
+.modal {
+  position: fixed;
+  inset: 0;
+  display: none;
+  place-items: center;
+  background: rgba(0, 0, 0, 0.5);
+}
+.modal.show {
+  display: grid;
+}
+.modal-content {
+  background: #111;
+  color: #fff;
+  padding: 16px 14px;
+  border-radius: 14px;
+  width: min(420px, 92vw);
+  text-align: center;
+  box-shadow: var(--shadow);
+}
+.modal-content h2 {
+  margin-top: 0;
+  color: var(--red);
+}
+.modal-actions {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 8px;
+}
+.btn-secondary {
+  background: #2a2a2a;
+}
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}

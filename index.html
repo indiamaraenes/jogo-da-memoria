@@ -1,0 +1,58 @@
+<title>Jogo da memória</title>
+
+<!-- Google Fonts -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&family=Noto+Serif+JP:wght@700&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="css/style.css" />
+</head>
+
+<body>
+  <main class="container">
+    <header class="header">
+      <h1 class="title"><span class="jp"></span>Jogo da memória</h1>
+
+      <div class="controls">
+        <label for="difficulty" class="sr-only">Dificuldade</label>
+        <select id="difficulty" class="select">
+          <option value="6">Fácil (6 pares)</option>
+          <option value="8">Normal (8 pares)</option>
+          <option value="10">Intermediário (10 pares)</option>
+          <option value="12" selected>Clássico (12 pares)</option>
+          <option value="15">Avançado (15 pares)</option>
+          <option value="20">Difícil (20 pares)</option>
+          <option value="26">Insano (26 pares)</option>
+        </select>
+
+        <button id="reset-btn" class="btn">Reiniciar</button>
+      </div>
+    </header>
+
+    <section class="hud">
+      <div class="hud-item">Movimentos: <strong id="moves">0</strong></div>
+      <div class="hud-item">Tempo: <strong id="time">00:00</strong></div>
+      <div class="hud-item">Recorde: <strong id="best">—</strong></div>
+    </section>
+
+    <!-- O JS envolve #game-board com .board-wrap para centralizar -->
+    <div id="game-board" aria-label="Tabuleiro do jogo da memória" role="grid"></div>
+
+    <footer class="footer">
+      <small>Indiamara A. Enes</small>
+    </footer>
+  </main>
+
+  <!-- Modal de vitória -->
+  <div id="win-modal" class="modal" aria-hidden="true" role="dialog" aria-labelledby="win-title">
+    <div class="modal-content">
+      <h2 id="win-title">Parabéns!</h2>
+      <p>Você encontrou todos os pares.</p>
+      <p><b>Tempo:</b> <span id="win-time">00:00</span> &nbsp; | &nbsp; <b>Movimentos:</b> <span id="win-moves">0</span></p>
+      <p><b>Recorde desta dificuldade:</b> <span id="win-best">—</span></p>
+      <div class="modal-actions">
+        <button id="play-again" class="btn">Jogar novamente</button>
+        <button id="close-modal" class="btn btn-secondary">Fechar</button>
+      </div>
+    </div>
+  </div>
